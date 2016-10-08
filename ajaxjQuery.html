@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ajax简单例子</title>
+	<style>
+		h1, input, label, button, select, p {
+			font-size: 20px;
+			margin-top: 20px;
+		}
+		#form {
+			border: 1px solid #ccc;
+			margin: 0 auto;
+			width: 500px;
+			padding-left: 60px;
+			background-color: #fee;
+		}
+	</style>
+</head>
+<body>
+	<div id="form">
+		<h1>员工查询</h1>
+		<label>请输入员工编号：</label>
+		<input type="text" id="keyword"><br>
+		<button id="search">查询</button>
+		<p id="searchResult"></p>
+
+		<h1>员工创建</h1>
+		<label>请输入员工姓名：</label>
+		<input type="text" id="staffName"><br>
+		<label>请输入员工编号：</label>
+		<input type="text" id="staffNumber"><br>
+		<label>请选择员工性别：</label>
+		<select id="staffSex">
+			<option>男</option>
+			<option>女</option>
+		</select><br>
+		<label>请输入员工职位：</label>
+		<input type="text" id="staffJob"><br>
+		<button id="save">保存</button>
+		<p id="createResult"></p>
+	</div>
+	<script src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.js"></script>
+	<script>
+		// 查询员工
+		$(document).ready(function() {
+			$('#search').click(function() {
+				$.ajax({
+					type: "GET",
+					url: "serverjson.php?number="+$('#keyword').val(),
+					dataType: "json",
+					success: function(data) {
+						if(data.success) {
+							$('#searchResult').html(data.msg);
+						} else {
+							$('#searchResult').html("出现错误："+data.msg);
+						}
+					},
+					error: function(jqXHR) {
+						alert("发生错误"+jqXHR.status);
+					}
+				}); // Ajax方法结束
+			});	// click事件结束
+		});
+
+		// 创建员工
+		$(document).ready(function() {
+			$('#save').click(function() {
+				$.ajax({
+					type: "POST",
+					url: "serverjson.php",
+					dataType: "json",
+					data: {
+						name: $("#staffName").val(),
+						number: $("#staffNumber").val(),
+						sex: $("#staffSex").val(),
+						job: $("#staffJob").val()
+					},
+					success: function(data) {
+						if(data.success) {
+							$('#createResult').html(data.msg);
+						} else {
+							$('#createResult').html("出现错误："+data.msg);
+						}
+					},
+					error: function(jqXHR) {
+						alert("发生错误"+jqXHR.status);
+					}
+				}); // Ajax方法结束
+			});	// click事件结束
+		});
+	</script>
+</body>
+</html>
